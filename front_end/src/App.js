@@ -5,6 +5,8 @@ import Escrow from "./artifacts/contracts/Escrow.sol/Escrow.json";
 
 function App() {
   const [contract, setContract] = useState(null);
+  const [address, setAddress] = useState('');
+  const [provider, setProvider] = useState('');
   const [buyer, setBuyer] = useState('');
   const [seller, setSeller] = useState('');
   const [bal, setBal] = useState(0);
