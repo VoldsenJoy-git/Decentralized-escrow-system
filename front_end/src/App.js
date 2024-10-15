@@ -49,41 +49,52 @@ function App() {
   }
 
   const Initialize = async () => {
-    try {
-      const gasEstimate = await contract.estimateGas.SetAddress(buyer.toString(), seller.toString());
-      const setAddr = await contract.SetAddress(buyer.toString(), seller.toString(), { gasLimit: gasEstimate });
-      setBuyer('');
-      setSeller('');
-      await setAddr.wait();
-    } catch (err) {
-      console.log("Error in setting address:", err);
-    }
-  };
-  
-  const Deposit = async () => {
-    try {
-      const gasEstimate = await contract.estimateGas.depositFunds({ value: ethers.utils.parseEther(amount) });
-      const deposit = await contract.depositFunds({ value: ethers.utils.parseEther(amount), gasLimit: gasEstimate });
-      await deposit.wait();
-      alert("Deposit has been successful !!!");
-      getBalance();
-    } catch (err) {
-      console.log("Error in depositing:", err);
-    }
-  };
-  
-  const releaseFunds = async () => {
-    try {
-      const gasEstimate = await contract.estimateGas.releaseFunds();
-      const release = await contract.releaseFunds({ gasLimit: gasEstimate });
-      await release.wait();
-      alert("Funds have been released !!!");
-      getBalance();
-    } catch (err) {
-      console.log("Error in releasing funds:", err);
+  try {
+    const gasEstimate = await contract.estimateGas.SetAddress(buyer.toString(), seller.toString());
+    const setAddr = await contract.SetAddress(buyer.toString(), seller.toString(), { gasLimit: gasEstimate });
+    setBuyer('');
+    setSeller('');
+    await setAddr.wait();
+  } catch (err) {
+    console.log("Error in setting address:", err);
+  }
+};
+
+const Deposit = async () => {
+  try {
+    const gasEstimate = await contract.estimateGas.depositFunds({ value: ethers.utils.parseEther(amount) });
+    const deposit = await contract.depositFunds({ value: ethers.utils.parseEther(amount), gasLimit: gasEstimate });
+    await deposit.wait();
+    alert("Deposit has been successful !!!");
+    getBalance();
+  } catch (err) {
+    console.log("Error in depositing:", err);
+  }
+};
+
+const releaseFunds = async () => {
+  try {
+    const gasEstimate = await contract.estimateGas.releaseFunds();
+    console.log("Estimated gas for releaseFunds:", gasEstimate.toString()); // Log estimated gas
+
+    const release = await contract.releaseFunds({ gasLimit: gasEstimate });
+    await release.wait(); // Wait for the transaction to be mined
+
+    alert("Funds have been released !!!");
+    getBalance(); // Fetch the updated balance
+  } catch (err) {
+    console.log("Error in releasing funds:", err);
+    // If err is a string, log it directly
+    if (typeof err === "string") {
+      console.error(err);
+    } else {
+      // Otherwise, log the full error object for debugging
+      console.error("Error details:", err);
     }
   }
-  
+};
+
+
 
   const getBalance = async () => {
     const bal = await contract.getBalance();
@@ -97,7 +108,7 @@ function App() {
       <div>
         <input type='text' placeholder='Buyer Address' onChange={e => setBuyer(e.target.value)} />
         <input type='text' placeholder='Seller Address' onChange={e => setSeller(e.target.value)} />
-        <button onClick={Initialize}>Set Address</button>
+        <button onClick={Initialize}>Set Address's</button>
       </div>
       <div>
         <input type='number' placeholder='Amount' onChange={e => setAmount(e.target.value)} />

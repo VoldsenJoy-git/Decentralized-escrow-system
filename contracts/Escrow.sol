@@ -26,16 +26,18 @@ contract Escrow {
         contractBal += msg.value;
     }
 
-    // Release funds, only the buyer can release
-    function releaseFunds() external {
-        require(msg.sender == buyer, "Only buyer can release the funds");
-        require(contractBal > 0, "No funds to release");
+  event FundsReleased(address indexed seller, uint256 amount);
 
-        uint256 amount = contractBal;
-        contractBal = 0; // Reset the balance before transferring (reentrancy protection)
+function releaseFunds() external {
+    require(msg.sender == buyer, "Only buyer can release the funds");
+    require(contractBal > 0, "No funds to release");
 
-        seller.transfer(amount);
-    }
+    uint256 amount = contractBal;
+    contractBal = 0; // Reset the balance before transferring (reentrancy protection)
+
+    seller.transfer(amount);
+    emit FundsReleased(seller, amount); // Emit the event
+}
 
     // Return contract balance
     function getBalance() external view returns (uint256) {
