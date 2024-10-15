@@ -6,6 +6,6 @@ Used Web3 library like Ethers.js  for connecting the frontend to the smart contr
 
 # To Run 
 install all npm dependencies in both the main and front_end folder 
-Then goto front_end and 'npm start'
+Then run 'npm start' in the root folder
 ![](./front_end/public/sample_1.png)
 ![](./front_end/public/sample_2.png)
